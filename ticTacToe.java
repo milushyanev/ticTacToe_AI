@@ -23,7 +23,7 @@ public class ticTacToe {
 	private final char OponentChar='O';
 	private int SIZE=8;
 	private int MaxMovesPos=32;
-	private static final int maxDepth = 7;
+	private static final int maxDepth = 3;
 	private static final int MIN=Integer.MIN_VALUE;
 	private static final int MAX=Integer.MAX_VALUE;
 
@@ -230,6 +230,15 @@ public boolean WinCheck(char val){
     }
     return false;
 }
+public boolean Winner(){
+	if(WinCheck(PlayerChar)==true || WinCheck(OponentChar)==true){
+		return true;
+	}else if(WinCheck(EMPTY)!=false)return false;
+	else {
+	    System.out.println("Draw");
+	    return false;
+	     }
+	}
 public int evaluate() {
 	int points = 0;
 	// Check for win 4 in a row horizontally
@@ -471,15 +480,6 @@ public int max(int depth, int alpha, int beta){
     return bestPos;
 }
 
-public boolean Winner(){
-	if(WinCheck(PlayerChar)==true || WinCheck(OponentChar)==true){
-		return true;
-	}else if(WinCheck(EMPTY)!=false)return false;
-	else {
-	    System.out.println("Draw");
-	    return false;
-	     }
-	}
 public static int InputValidation(int validationOne,int validationTwo) {
     int number;
     Scanner sc=new Scanner(System.in);
