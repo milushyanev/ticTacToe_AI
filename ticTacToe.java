@@ -87,7 +87,7 @@ public void printBoard(int firstM){
 	        }
 	    }
 }
-public void GetHumanMoves(int firstM){
+public void GetUserMoves(int firstM){
 	char rightChar=' ';
 		if(firstM==1){
 			rightChar=PlayerChar;
@@ -508,7 +508,7 @@ public static void main(String[] args) {
     System.out.print("-> ");int firstMove=InputValidation(1,2);
     do{
         if(firstMove==1){
-    game.GetHumanMoves(firstMove);
+    game.GetUserMoves(firstMove);
     try {
 		Thread.sleep(timing * 1000);
 	} catch (InterruptedException e) {
@@ -524,7 +524,7 @@ public static void main(String[] args) {
         		e.printStackTrace();
         	}
     game.AImove(firstMove);
-    game.GetHumanMoves(firstMove);
+    game.GetUserMoves(firstMove);
         	}
        }while(game.Winner()==false);
     // TODO code application logic here
