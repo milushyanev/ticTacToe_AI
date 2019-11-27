@@ -34,7 +34,7 @@ public ticTacToe(){
 	rows =  new ArrayList<>();
 	gameBrd=new char[SIZE][SIZE];
 	counter=0;
-	randomMove=rand.nextInt(2)+2;;
+	randomMove=rand.nextInt(2)+1;
 	setup();
 	String s="";
 	for(int i=0;i<MaxMovesPos;i++){
@@ -213,7 +213,7 @@ public void AImove(int firstM){
 }  
 
 public boolean WinCheck(char val){
-    for (int i = 0; i <=(SIZE/2); i++)
+    for (int i = 0; i <SIZE; i++)
     {
         for (int j = 0; j <=(SIZE/2); j++)
         {
@@ -221,10 +221,10 @@ public boolean WinCheck(char val){
                 (gameBrd[i][j + 1] == val) && 
                 (gameBrd[i][j + 2] == val) && 
                 (gameBrd[i][j + 3] == val))||
-                    (gameBrd[i][j] == val) && 
-                (gameBrd[i + 1][j] == val) && 
-                (gameBrd[i + 2][j] == val) && 
-                (gameBrd[i + 3][j] == val))
+                    (gameBrd[j][i] == val) && 
+                (gameBrd[j + 1][i] == val) && 
+                (gameBrd[j + 2][i] == val) && 
+                (gameBrd[j + 3][i] == val))
                     return true;     
         }
     }
@@ -240,196 +240,237 @@ public boolean Winner(){
 	     }
 	}
 public int evaluate() {
+	
 	int points = 0;
+	char Case1=OponentChar;
+	char Case2=PlayerChar;
+	
 	// Check for win 4 in a row horizontally
 	for (int row = 0; row < SIZE; row++) {
        for (int column = 0; column < 4; column++) {
-    	   //OOOO
-           if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == OponentChar) 
-                   && (gameBrd[row][column + 2] == OponentChar) && 
-                   (gameBrd[row][column + 3] == OponentChar)) {
-               points += 5000; // AI advantage
+    	   //OOOO||XXXX
+           if ((gameBrd[row][column] == Case1) && (gameBrd[row][column + 1] == Case1) 
+                   && (gameBrd[row][column + 2] == Case1) && 
+                   (gameBrd[row][column + 3] == Case1)) {
+        	   if(Case1==OponentChar) {
+        		   points += 10000; // AI advantage
+               }else if(Case1==PlayerChar) {
+            	   points-=10000;
+               }
            }
-           else if ((gameBrd[row][column] == PlayerChar) && (gameBrd[row][column + 1] == PlayerChar) 
-                   && (gameBrd[row][column + 2] == PlayerChar) && 
-                   (gameBrd[row][column + 3] == PlayerChar)) {
-               points -= 5000; // Player advantage
-           }
-         
            //EOOOE
-           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == OponentChar) 
-                   && (gameBrd[row][column + 2] == OponentChar) && 
-                   (gameBrd[row][column + 3] == OponentChar) && (gameBrd[row][column + 4] == EMPTY)) {
-               points += 1000; // AI advantage
-           }//EXXXE
-           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == PlayerChar) 
-                   && (gameBrd[row][column + 2] == PlayerChar) && 
-                   (gameBrd[row][column + 3] == PlayerChar) && (gameBrd[row][column + 4] == EMPTY)) {
-               points -= 1000; // Player advantage
-           }//EXEXE
-           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == PlayerChar) 
-                   && (gameBrd[row][column + 2] == EMPTY) && 
-                   (gameBrd[row][column + 3] == PlayerChar) && (gameBrd[row][column + 4] == EMPTY)) {
-               points -= 1000; // Player advantage
+           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == Case1) 
+                   && (gameBrd[row][column + 2] == Case1) && 
+                   (gameBrd[row][column + 3] == Case1) && (gameBrd[row][column + 4] == EMPTY)) {
+        	   if(Case1==OponentChar) {
+                   points += 2000; // AI advantage
+               }else if(Case1==PlayerChar) {
+            	   points-= 2000;
+                   }
            }
-           //EOOE
-           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == OponentChar) 
-                   && (gameBrd[row][column + 2] == OponentChar) && 
+           //EOOE||EXXE
+           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == Case1) 
+                   && (gameBrd[row][column + 2] == Case1) && 
                    (gameBrd[row][column + 3] == EMPTY)) {
-               points += 800; // AI advantage
-           }//EXXE
-           else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == PlayerChar) 
-                   && (gameBrd[row][column + 2] == PlayerChar) && 
-                   (gameBrd[row][column + 3] == EMPTY)) {
-               points -= 800; // Player advantage
-           }
+        	   if(Case1==OponentChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar) {
+            	   points-= 1500;
+                   } // Player advantage
+           }//OOOE || EOOO
+           else if ((gameBrd[row][column] == Case1) && (gameBrd[row][column + 1] == Case1) 
+                   && (gameBrd[row][column + 2] == Case1)&&(gameBrd[row][column + 3] == EMPTY)||
+                   (gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == Case1) 
+                   && (gameBrd[row][column + 2] == Case1)&&(gameBrd[row][column + 3] == Case1)) {
+        	   if(Case1==OponentChar) {
+                   points += 1000; // AI advantage
+               }else if(Case1==PlayerChar) {
+            	   points-= 1000;
+                   } 
+           } 
        }
            
    }
    // Check for win 4 in a row vertically
 	for (int row = 0; row < SIZE; row++) {
 		   for (int column = 0; column < 4; column++) {
-		       if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == OponentChar) 
-		               && (gameBrd[column + 2][row] == OponentChar) && 
-		               (gameBrd[column + 3][row] == OponentChar)) {
-		           points += 2500;
-		       }
-		       else if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == PlayerChar) 
-		               && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == PlayerChar) 
-		               ) {
-		           points -= 2500;
-		       }//EOOOE
-		       else  if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == OponentChar) 
-		               && (gameBrd[column + 2][row] == OponentChar) && 
-		               (gameBrd[column + 3][row] == OponentChar) && (gameBrd[column + 4][row] == EMPTY)) {
-		           points += 1000;
-		       }//EXXXE
-		       else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == PlayerChar) 
-		               && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == PlayerChar) 
-		               && (gameBrd[column + 4][row] == EMPTY)) {
-		           points -= 1000;
-		       }//EOOE
-		       else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == OponentChar) 
-		               && (gameBrd[column + 2][row] == OponentChar) && 
+			   //XXXX||OOOO
+		       if ((gameBrd[column][row] == Case1) && (gameBrd[column + 1][row] == Case1) 
+		               && (gameBrd[column + 2][row] == Case1) && 
+		               (gameBrd[column + 3][row] == Case1)) {
+		    	   if(Case1==OponentChar) {
+	                   points += 10000; // AI advantage
+	               }else if(Case1==PlayerChar) {
+	            	   points-= 10000;
+	                   } // Player advantage
+		       }//EOOOE||EXXXE
+		       else  if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case1) 
+		               && (gameBrd[column + 2][row] == Case1) && 
+		               (gameBrd[column + 3][row] == Case1) && (gameBrd[column + 4][row] == EMPTY)) {
+		    	   if(Case1==OponentChar) {
+	                   points += 2000; // AI advantage
+	               }else if(Case1==PlayerChar) {
+	            	   points-= 2000;
+	                   }
+		       }//EOOE||EXXE
+		       else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case1) 
+		               && (gameBrd[column + 2][row] == Case1) && 
 		               (gameBrd[column + 3][row] == EMPTY)) {
-		           points += 800;
-		       }//EXXE
-		       else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == PlayerChar) 
-		               && (gameBrd[column + 2][row] == PlayerChar) 
-		               && (gameBrd[column + 3][row] == EMPTY)) {
-		           points -= 800;
+		    	   if(Case1==OponentChar) {
+	                   points += 1000; // AI advantage
+	               }else if(Case1==PlayerChar) {
+	            	   points-= 1000;
+	                   }
 		       }
 		   }
    }
 // Check for block advantage horizontally
 	for (int row = 0; row < SIZE; row++) {
 	   for (int column = 0; column < 5; column++) {
-	       // If player blocks AI
-	       //XOOO
-	       if ((gameBrd[row][column] == PlayerChar) && (gameBrd[row][column + 1] == OponentChar) 
-	               && (gameBrd[row][column + 2] == OponentChar) && (gameBrd[row][column + 3] == OponentChar)) {
-	           points -= 1500;
-	       }//OOOX
-	       else if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == OponentChar) 
-	               && (gameBrd[row][column + 2] == OponentChar) && (gameBrd[row][column + 3] == PlayerChar)) {
-	           points -= 1500;
-	       }//OXOO
-	       else if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == PlayerChar) 
-	               && (gameBrd[row][column + 2] == OponentChar) && (gameBrd[row][column + 3] == OponentChar)) {
-	           points -= 1500;
-	       }//OOXO
-	       else if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == OponentChar) 
-	               && (gameBrd[row][column + 2] == PlayerChar) && (gameBrd[row][column + 3] == OponentChar)) {
-	           points -= 1500;
-	       }
-	       // If AI blocks player 
-		   //OXXX
-	       if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == PlayerChar) 
-	               && (gameBrd[row][column + 2] == PlayerChar) && (gameBrd[row][column + 3] == PlayerChar)) {
-	           points += 1500;
-	       }//XXXO
-	       else if ((gameBrd[row][column] == PlayerChar) && (gameBrd[row][column + 1] == PlayerChar) 
-	               && (gameBrd[row][column + 2] == PlayerChar) && (gameBrd[row][column + 3] == OponentChar)) {
-	           points += 1500;
-	       }//XOXX
-	       else if ((gameBrd[row][column] == PlayerChar) && (gameBrd[row][column + 1] == OponentChar) 
-	               && (gameBrd[row][column + 2] == PlayerChar) && (gameBrd[row][column + 3] == PlayerChar)) {
-	           points += 1500;
-	       }//XXOX
+		   //OXXX||XOOO
+	       if ((gameBrd[row][column] == Case1) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case2) && (gameBrd[row][column + 3] == Case2)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+	       }//XXXO||OOOX
+	       else if ((gameBrd[row][column] == Case2) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case2) && (gameBrd[row][column + 3] == Case1)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 2500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 2500;
+                   }
+	       }//XOXX||OXOO
+	       else if ((gameBrd[row][column] == Case2) && (gameBrd[row][column + 1] == Case1) 
+	               && (gameBrd[row][column + 2] == Case2) && (gameBrd[row][column + 3] == Case2)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+	       }//XXOX||OOXO
 	       else if ((gameBrd[row][column] == PlayerChar) && (gameBrd[row][column + 1] == PlayerChar) 
 	               && (gameBrd[row][column + 2] == OponentChar) && (gameBrd[row][column + 3] == PlayerChar)) {
-	           points += 1500;
-	       }//OXX
-	       else if ((gameBrd[row][column] == OponentChar) && (gameBrd[row][column + 1] == PlayerChar) 
-	               && (gameBrd[row][column + 2] == PlayerChar)) {
-	           points += 1500;
-	       }//EXOXE
-	       else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == PlayerChar) 
-	               && (gameBrd[row][column + 2] == OponentChar) && (gameBrd[row][column + 3] == PlayerChar)
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+	       }//OXXE || EXXO
+	       else if ((gameBrd[row][column] == Case1) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case2)&& (gameBrd[row][column + 2] == EMPTY)||
+	               (gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case2)&& (gameBrd[row][column + 2] == Case1)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+	       }//OXX||XXO
+	       else if ((gameBrd[row][column] == Case1) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case2)||(gameBrd[row][column] == Case2) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case1)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1000; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1000;
+                   }
+	       }//EXOXE||EOXOE
+	       else if ((gameBrd[row][column] == EMPTY) && (gameBrd[row][column + 1] == Case2) 
+	               && (gameBrd[row][column + 2] == Case1) && (gameBrd[row][column + 3] == Case2)
 	               && (gameBrd[row][column + 4] == EMPTY)) {
-	           points += 1500;
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
 	       }
 	   	}
 	 }
 
-   // Check for block advantage vertically
+	// Check for block advantage vertically
 	for (int row = 0; row < SIZE; row++) {
        for (int column = 0; column < 5; column++) {
-    	   
-           //XOOO
-           if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == OponentChar) 
-                   && (gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points -= 1500;
-           }//OOOX
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == OponentChar) 
-                   &&(gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == PlayerChar)) {
-               points -= 1500;
-           }//OXOO
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   &&(gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points -= 1500;
-           }//XOOO
-           else if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == OponentChar) 
-                   && (gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points -= 1500;
-           }//OXOO
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   &&(gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points -= 1500;
-           }//OOXO
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == OponentChar) 
-                   && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points -= 1500;
-           }
-           //XXXO
-           else if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == OponentChar)) {
-               points += 1500;
-           }//XOXX
-           else if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == OponentChar) 
-                   && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == PlayerChar)) {
-               points += 1500;
-           }//XXOX
-           else if ((gameBrd[column][row] == PlayerChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   &&(gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == PlayerChar)) {
-               points += 1500;
-           }//OXXX
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   && (gameBrd[column + 2][row] == PlayerChar) && (gameBrd[column + 3][row] == PlayerChar)) {
-               points += 1500;
-           }//EXOXE
-           else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == PlayerChar) 
-                   &&(gameBrd[column + 2][row] == OponentChar) && (gameBrd[column + 3][row] == PlayerChar)
+  
+          //XXXO||OOOX
+          if ((gameBrd[column][row] == Case2) && (gameBrd[column + 1][row] == Case2) 
+                   && (gameBrd[column + 2][row] == Case2) && (gameBrd[column + 3][row] == Case1) ||
+                   (gameBrd[column][row] == Case1) && (gameBrd[column + 1][row] == Case2) 
+                   && (gameBrd[column + 2][row] == Case2) && (gameBrd[column + 3][row] == Case2)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 2500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 2500;
+                   }
+          }//OXX||XOO
+	       else if ((gameBrd[column][row] == Case1) && (gameBrd[column + 1][row] == Case2) 
+	               && (gameBrd[column + 2][row] == Case2)) {
+	    	   if(Case1==OponentChar && Case2==PlayerChar) {
+	               points += 1000; // AI advantage
+	           }else if(Case1==PlayerChar && Case2==OponentChar) {
+	        	   points-= 1000;
+	               }
+	       }//XOXX||OXOO
+           else if ((gameBrd[column][row] == Case2) && (gameBrd[column + 1][row] == Case1) 
+                   && (gameBrd[column + 2][row] == Case2) && (gameBrd[column + 3][row] == Case2)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+           }//XXOX||OOXO
+           else if ((gameBrd[column][row] == Case2) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case1) && (gameBrd[column + 3][row] == Case2)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+           }//EXOXE||EOXOE
+           else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case1) && (gameBrd[column + 3][row] == Case2)
                    && (gameBrd[column + 4][row] == EMPTY)) {
-               points += 1500;
-           }//OXX
-           else if ((gameBrd[column][row] == OponentChar) && (gameBrd[column + 1][row] == PlayerChar) 
-                   &&(gameBrd[column + 2][row] == PlayerChar)) {
-               points += 1500;
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+           }//EXXOE||EOOXE
+           else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case2) && (gameBrd[column + 3][row] == Case1)
+                   && (gameBrd[column + 4][row] == EMPTY)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+           }//OXOXE||XOXOE
+           else if ((gameBrd[column][row] == Case1) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case1) && (gameBrd[column + 3][row] == Case2)
+                   && (gameBrd[column + 4][row] == EMPTY)||(gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case1) && (gameBrd[column + 3][row] == Case2)
+                   && (gameBrd[column + 4][row] == Case1)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
+           }//EOXX||EXOO
+           else if ((gameBrd[column][row] == EMPTY) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case2) &&(gameBrd[column + 3][row] == Case2)||
+                   (gameBrd[column][row] == Case2) && (gameBrd[column + 1][row] == Case2) 
+                   &&(gameBrd[column + 2][row] == Case1) &&(gameBrd[column + 3][row] == EMPTY)) {
+        	   if(Case1==OponentChar && Case2==PlayerChar) {
+                   points += 1500; // AI advantage
+               }else if(Case1==PlayerChar && Case2==OponentChar) {
+            	   points-= 1500;
+                   }
            }
        }
-   }
-       
+   }   
 	return points;
 }
 public int min(int depth, int alpha, int beta){
